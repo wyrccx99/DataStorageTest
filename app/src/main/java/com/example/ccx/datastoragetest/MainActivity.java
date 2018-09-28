@@ -3,6 +3,7 @@ package com.example.ccx.datastoragetest;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -49,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bindviews(){
-        tv_1 = (TextView) findViewById(R.id.tv_1);
-        tv_2 = (TextView) findViewById(R.id.tv_2);
-        tv_3 = (TextView) findViewById(R.id.tv_3);
-        tv_4 = (TextView) findViewById(R.id.tv_4);
+        tv_1 =  findViewById(R.id.tv_1);
+        tv_2 =  findViewById(R.id.tv_2);
+        tv_3 =  findViewById(R.id.tv_3);
+        tv_4 =  findViewById(R.id.tv_4);
         w1.setBarcodesx("1");
         w2.setBarcodesx("2");
         w3.setBarcodesx("3");
@@ -118,14 +119,12 @@ public class MainActivity extends AppCompatActivity {
         if(rwlh != null){
             for(Weight w:rwlh){
                 tv_1.append(w.toString());
-                System.out.printf(w.toString());
             }
         }
 
         tv_2.setText("");
         for(Weight w:rwld){
             tv_2.append(w.toString());
-            System.out.printf(w.toString());
         }
 
         tv_3.setText("");
@@ -133,14 +132,15 @@ public class MainActivity extends AppCompatActivity {
             Weight weight = (Weight) (dataStorage.load(MyQueue.class,"ndel")).pop();
             tv_3.append(weight.toString());
         }
-        (dataStorage.load(MyQueue.class,"ndel")).push(w5);
+        dataStorage.load(MyQueue.class,"ndel").push(w5);
 
         tv_4.setText("");
         while (!(dataStorage.load(MyStack.class,"ndel")).isEmpity()){
             Weight weight = (Weight) (dataStorage.load(MyStack.class,"ndel")).pop();
             tv_4.append(weight.toString());
         }
-        (dataStorage.load(MyStack.class,"ndel")).push(w5);
+        dataStorage.load(MyStack.class,"ndel").push(w5);
+        Log.i("ssss--->","sdlsdlfsldfjsldfjlj");
         /*tv_3.setText("");
         while (!myQueue.isEmpity()){
             tv_3.append(myQueue.pop().toString());
