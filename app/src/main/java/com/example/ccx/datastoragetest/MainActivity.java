@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
         dataStorage.load(MyStack.class,"ndel").push(w5);
         Log.i("ssss--->","sdlsdlfsldfjsldfjlj");
+        dataStorage.load(MyStack.class,"ndel").push(w6);
         /*tv_3.setText("");
         while (!myQueue.isEmpity()){
             tv_3.append(myQueue.pop().toString());
