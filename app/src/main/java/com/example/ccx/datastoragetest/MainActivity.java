@@ -1,28 +1,32 @@
 package com.example.ccx.datastoragetest;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-
 import com.example.ccx.bean.Weight;
 import com.example.ccx.util.MyQueue;
 import com.example.ccx.util.MyStack;
 import com.orhanobut.hawk.Hawk;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import xiaofei.library.datastorage.DataStorageFactory;
+
 import static com.example.ccx.datastoragetest.BaseApplication.dataStorage;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView tv_1;
-    private TextView tv_2;
-    private TextView tv_3;
-    private TextView tv_4;
+    @BindView(R.id.tv_1)
+    TextView tv1;
+    @BindView(R.id.tv_2)
+    TextView tv2;
+    @BindView(R.id.tv_3)
+    TextView tv3;
+    @BindView(R.id.tv_4)
+    TextView tv4;
     private LinkedList<Weight> wl = null;
     private MyQueue<Weight> myQueue;
     private MyStack<Weight> myStack;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         myQueue = new MyQueue<>();
         myStack = new MyStack<>();
         bindviews();
@@ -49,11 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 DataStorageFactory.TYPE_DATABASE);
     }
 
-    private void bindviews(){
-        tv_1 =  findViewById(R.id.tv_1);
-        tv_2 =  findViewById(R.id.tv_2);
-        tv_3 =  findViewById(R.id.tv_3);
-        tv_4 =  findViewById(R.id.tv_4);
+    private void bindviews() {
         w1.setBarcodesx("1");
         w2.setBarcodesx("2");
         w3.setBarcodesx("3");
@@ -63,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         w7.setBarcodesx("7");
 
         wl = new LinkedList<>();//weightlist
-
-
         wl.add(w1);
         wl.add(w2);
         wl.add(w3);
@@ -90,58 +89,61 @@ public class MainActivity extends AppCompatActivity {
         myStack.push(w7);
     }
 
-    public void next(View view){
-        Intent i = new Intent(MainActivity.this,Main2Activity.class);
+    @OnClick(R.id.bt_next)
+    public void next() {
+        Intent i = new Intent(MainActivity.this, Main2Activity.class);
         startActivity(i);
     }
 
-    public void save(View view){
-        Hawk.put("hawkwl",wl);
-        dataStorage.storeOrUpdate(wl,"dwl");
-        dataStorage.storeOrUpdate(myQueue,"ndel");
-        dataStorage.storeOrUpdate(myStack,"ndel");
+    @OnClick(R.id.bt_save)
+    public void save() {
+        Hawk.put("hawkwl", wl);
+        dataStorage.storeOrUpdate(wl, "dwl");
+        dataStorage.storeOrUpdate(myQueue, "ndel");
+        dataStorage.storeOrUpdate(myStack, "ndel");
     }
 
-    public void read(View view){
+    @OnClick(R.id.bt_read)
+    public void read() {
 
         Object object;
         LinkedList<Weight> rwlh = null;
         object = Hawk.get("hawkwl");
-        if(object != null){
-            rwlh = new LinkedList<>((ArrayList)object);
+        if (object != null) {
+            rwlh = new LinkedList<>((ArrayList) object);
         }
 
-        LinkedList<Weight> rwld = new LinkedList<>(dataStorage.load(LinkedList.class,"dwl"));
+        LinkedList<Weight> rwld = new LinkedList<>(dataStorage.load(LinkedList.class, "dwl"));
 
         //myQueue = dataStorage.load(MyQueue.class,"ndel");
 
-        tv_1.setText("");
-        if(rwlh != null){
-            for(Weight w:rwlh){
-                tv_1.append(w.toString());
+        tv1.setText("");
+        if (rwlh != null) {
+            for (Weight w : rwlh) {
+                tv1.append(w.toString());
             }
         }
 
-        tv_2.setText("");
-        for(Weight w:rwld){
-            tv_2.append(w.toString());
+        tv2.setText("");
+        for (Weight w : rwld) {
+            tv2.append(w.toString());
         }
 
-        tv_3.setText("");
-        while (!(dataStorage.load(MyQueue.class,"ndel")).isEmpity()){
-            Weight weight = (Weight) (dataStorage.load(MyQueue.class,"ndel")).pop();
-            tv_3.append(weight.toString());
+        tv3.setText("");
+        while (!(dataStorage.load(MyQueue.class, "ndel")).isEmpity()) {
+            Weight weight = (Weight) (dataStorage.load(MyQueue.class, "ndel")).pop();
+            tv3.append(weight.toString());
         }
-        dataStorage.load(MyQueue.class,"ndel").push(w5);
+        dataStorage.load(MyQueue.class, "ndel").push(w5);
 
-        tv_4.setText("");
-        while (!(dataStorage.load(MyStack.class,"ndel")).isEmpity()){
-            Weight weight = (Weight) (dataStorage.load(MyStack.class,"ndel")).pop();
-            tv_4.append(weight.toString());
+        tv4.setText("");
+        while (!(dataStorage.load(MyStack.class, "ndel")).isEmpity()) {
+            Weight weight = (Weight) (dataStorage.load(MyStack.class, "ndel")).pop();
+            tv4.append(weight.toString());
         }
-        dataStorage.load(MyStack.class,"ndel").push(w5);
-        Log.i("ssss--->","sdlsdlfsldfjsldfjlj");
-        dataStorage.load(MyStack.class,"ndel").push(w6);
+        dataStorage.load(MyStack.class, "ndel").push(w5);
+        Log.i("ssss--->", "sdlsdlfsldfjsldfjlj");
+        dataStorage.load(MyStack.class, "ndel").push(w6);
         /*tv_3.setText("");
         while (!myQueue.isEmpity()){
             tv_3.append(myQueue.pop().toString());

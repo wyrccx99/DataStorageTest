@@ -1,7 +1,7 @@
 package com.example.ccx.datastoragetest;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -12,56 +12,68 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static com.example.ccx.datastoragetest.BaseApplication.dataStorage;
 
 public class Main2Activity extends AppCompatActivity {
-    private TextView tv_1;
-    private TextView tv_2;
-    private LinkedList<Weight> wl = null;
+    @BindView(R.id.tv_1)
+    TextView tv1;
+    @BindView(R.id.tv_2)
+    TextView tv2;
+    Weight w3 = new Weight();
+    Weight w4 = new Weight();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        ButterKnife.bind(this);
         bindviews();
         Hawk.init(this)
                 .build();
     }
 
-    private void bindviews(){
-        tv_1 = (TextView) findViewById(R.id.tv_1);
-        tv_2 = (TextView) findViewById(R.id.tv_2);
+    private void bindviews() {
+        w3.setBarcodesx("3");
+        w4.setBarcodesx("4");
     }
 
-    public void save(View view){
+    @OnClick(R.id.bt_save)
+    public void save() {
         LinkedList<Weight> wl = new LinkedList<>();
-        Hawk.put("hawkwl",wl);
+        wl.add(w3);
+        wl.add(w4);
+        Hawk.put("hawkwl", wl);
         dataStorage.deleteAll(Weight.class);
-        dataStorage.storeOrUpdate(wl);
+        dataStorage.storeOrUpdate(wl, "datawl");
     }
 
-    public void read(View view){
+    @OnClick(R.id.bt_read)
+    public void read() {
 
         Object object;
         LinkedList<Weight> rwlh = null;
         object = Hawk.get("hawkwl");
-        if(object != null){
-            rwlh = new LinkedList<>((ArrayList)object);
+        if (object != null) {
+            rwlh = new LinkedList<>((ArrayList) object);
         }
-        LinkedList<Weight> rwld = new LinkedList<>(dataStorage.loadAll(Weight.class));
+        LinkedList<Weight> rwld = new LinkedList<>(dataStorage.load(LinkedList.class, "datawl"));
 
-        tv_1.setText("");
-        if(rwlh != null){
-            for(Weight w:rwlh){
-                tv_1.append(w.toString());
-                Log.i("hawkwl",w.toString());
+        tv1.setText("");
+        if (rwlh != null) {
+            for (Weight w : rwlh) {
+                tv1.append(w.toString());
+                Log.i("hawkwl", w.toString());
             }
         }
 
-        tv_2.setText("");
-        for(Weight w:rwld){
-            tv_2.append(w.toString());
-            Log.i("datawl",w.toString());
+        tv2.setText("");
+        for (Weight w : rwld) {
+            tv2.append(w.toString());
+            Log.i("datawl", w.toString());
         }
         //tv_1.setText(Hawk.get("hawkwl").getClass().getName());
     }
